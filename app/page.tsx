@@ -1,10 +1,11 @@
 import Image from "next/image";
-import WomanImg from "../images/woman.svg";
-import WomanFrameImg from "../images/woman-frame.png";
+import WomanImg from "../images/woman.png";
+import WomanFrameImg from "../images/woman-card-frame.png";
 import ManFrameImg from "../images/man-frame.png";
-import ManImg from "../images/man.svg";
+import ManImg from "../images/man.png";
 import FrameImg from "../images/frame.png";
 import LocationIcon from "../images/location.svg";
+import CursorImg from "../images/cursor.png";
 import FlowingArrow from "./components/FlowingArrow";
 
 export default function Home() {
@@ -31,12 +32,28 @@ export default function Home() {
               height={580}
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Image
-                src={WomanFrameImg}
-                alt="card showing nigerian business"
-                width={400}
-                height={280}
-              />
+              <div className="relative group max-w-[400px]">
+                <Image
+                  src={WomanFrameImg}
+                  alt="card showing nigerian business"
+                  width={400}
+                  height={280}
+                />
+                <button
+                  id="fp-send-btn" disabled
+                  className="mt-3 w-full py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl text-white font-bold text-lg cursor-pointer shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300 hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Send
+                </button>
+                <Image
+                  id="fp-cursor"
+                  src={CursorImg}
+                  alt="cursor hovering over send button"
+                  width={45}
+                  height={45}
+                  className="absolute -bottom-3 right-14"
+                />
+              </div>
             </div>
             <div className="absolute px-10 bottom-0 left-0 w-full pb-10 bg-linear-to-t from-black/80 to-transparent rounded-2xl">
               <div className="flex items-center gap-2 mb-4">
@@ -56,7 +73,7 @@ export default function Home() {
               </h4>
             </div>
           </div>
-          <div className="w-65 pt-32">
+          <div id="fp-text1" className="w-65 pt-32">
             <h2 className="text-2xl font-black mb-2 leading-[1.4]">
               Funds leave your Yolat wallet in NGN...
             </h2>
@@ -89,7 +106,7 @@ export default function Home() {
         </div>
         {/* Bottom-right card */}
         <div id="fp-row3" className="flex gap-16 max-w-300 mx-auto mt-60">
-          <div className="w-65 pt-20">
+          <div id="fp-text3" className="w-65 pt-20">
             <h2 className="text-2xl font-black mb-2 leading-[1.4]">
               ...and arrives within seconds. Every time
             </h2>

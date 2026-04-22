@@ -41,7 +41,7 @@ function buildArrow(
     const [x2, y2] = waypoints[seg + 1];
     const segLen = Math.hypot(x2 - x1, y2 - y1);
     const isLastSeg = seg === waypoints.length - 2;
-    const finalGap = isLastSeg ? 20 : 0; // Gap before arrowhead
+    const finalGap = isLastSeg ? 20 : 0;
     const effectiveLen = segLen - finalGap;
     const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI);
 
@@ -104,10 +104,15 @@ function updateArrow(
   ballEl.setAttribute("cy", String(pt.y));
   glowEl.setAttribute("cx", String(pt.x));
   glowEl.setAttribute("cy", String(pt.y));
+
+  const op = progress > 0 && progress < 1 ? "1" : "0";
+  ballEl.setAttribute("opacity", op);
+  glowEl.setAttribute("opacity", op);
+
   arrow.dashes.forEach(({ el, midDist }) => {
     el.setAttribute("fill", midDist <= dist ? ACCENT : BASE);
   });
-  arrow.head.setAttribute("stroke", progress > 0.9 ? ACCENT : BASE);
+  arrow.head.setAttribute("stroke", progress > 0.99 ? ACCENT : BASE);
 }
 
 function teardownArrow(arrow: ArrowState) {
@@ -159,7 +164,18 @@ export default function FlowingArrow() {
       const convertingTextEl = document.getElementById("fp-converting-text");
       const row3El = document.getElementById("fp-row3");
       const manColEl = document.getElementById("fp-man-col");
-      if (!womanColEl || !frameEl || !convertingTextEl || !row3El || !manColEl) return;
+      const text1El = document.getElementById("fp-text1");
+      const text3El = document.getElementById("fp-text3");
+      const sendBtnEl = document.getElementById("fp-send-btn");
+      const cursorEl = document.getElementById("fp-cursor");
+      if (!womanColEl || !frameEl || !convertingTextEl || !row3El || !manColEl || !text1El || !text3El || !sendBtnEl || !cursorEl) return;
+
+      [text1El, convertingTextEl, text3El].forEach(el => {
+        el.style.transition = "color 0.8s ease";
+      });
+      frameEl.style.transition = "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+      sendBtnEl.style.transition = "all 0.3s ease";
+      cursorEl.style.transition = "all 0.3s ease";
 
       function rel(el: Element) {
         const r = el.getBoundingClientRect();
@@ -205,10 +221,13 @@ export default function FlowingArrow() {
 
       updateArrow(arrow1, p1, b1, g1, 0);
       updateArrow(arrow2, p2, b2, g2, 0);
-      b1.setAttribute("opacity", "1");
+      b1.setAttribute("opacity", "0");
       b2.setAttribute("opacity", "0");
-      g1.setAttribute("opacity", "1");
+      g1.setAttribute("opacity", "0");
       g2.setAttribute("opacity", "0");
+
+      const baseColor = "#78716C";
+      const activeColor = "#FFFFFF";
 
       st = ScrollTrigger.create({
         trigger: container,
@@ -217,19 +236,46 @@ export default function FlowingArrow() {
         scrub: 1,
         onUpdate(self) {
           const p = self.progress;
-          if (p <= 0.5) {
-            b1.setAttribute("opacity", "1");
-            g1.setAttribute("opacity", "1");
+
+          if (p < 0.15) {
+            const clickP = p / 0.15;
+            cursorEl.style.transform = `scale(${1 - clickP * 0.2})`;
+            cursorEl.style.opacity = "1";
+            if (clickP > 0.8) {
+              sendBtnEl.style.backgroundColor = ACCENT;
+              sendBtnEl.style.color = "#000000";
+            } else {
+              sendBtnEl.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+              sendBtnEl.style.color = "#FFFFFF";
+            }
+          } else {
+            cursorEl.style.transform = "scale(1)";
+            cursorEl.style.opacity = "0";
+            sendBtnEl.style.backgroundColor = ACCENT;
+            sendBtnEl.style.color = "#000000";
+          }
+
+          frameEl.style.transform = p >= 0.5 ? "scale(1.15)" : "scale(1)";
+
+          text1El.style.color = p < 0.48 ? activeColor : baseColor;
+          convertingTextEl.style.color = (p >= 0.48 && p < 0.95) ? activeColor : baseColor;
+          text3El.style.color = p >= 0.95 ? activeColor : baseColor;
+
+          const ballP = p < 0.15 ? 0 : (p - 0.15) / 0.85;
+
+          if (ballP <= 0.5) {
+            b1.setAttribute("opacity", ballP > 0 ? "1" : "0");
+            g1.setAttribute("opacity", ballP > 0 ? "1" : "0");
             b2.setAttribute("opacity", "0");
             g2.setAttribute("opacity", "0");
-            updateArrow(arrow1!, p1!, b1, g1, p / 0.5);
+            updateArrow(arrow1!, p1!, b1, g1, ballP / 0.5);
           } else {
             updateArrow(arrow1!, p1!, b1, g1, 1);
             b1.setAttribute("opacity", "0");
             g1.setAttribute("opacity", "0");
             b2.setAttribute("opacity", "1");
             g2.setAttribute("opacity", "1");
-            updateArrow(arrow2!, p2!, b2, g2, (p - 0.5) / 0.5);
+            updateArrow(arrow2!, p2!, b2, g2, (ballP - 0.5) / 0.5);
           }
         },
       });
