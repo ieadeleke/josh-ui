@@ -21,11 +21,6 @@ type ArrowState = {
   head: SVGPolylineElement;
 };
 
-/**
- * Builds dashes segment-by-segment so no dash straddles a corner —
- * that was what caused the "curved" look at the V bend.
- * waypoints: [[x0,y0], [x1,y1], ...] — two points = straight line, three = V-shape
- */
 function buildArrow(
   svg: SVGSVGElement,
   pathEl: SVGPathElement,
@@ -56,7 +51,7 @@ function buildArrow(
       const t2 = dashEnd / segLen;
       const cx = x1 + (x2 - x1) * (t1 + t2) / 2;
       const cy = y1 + (y2 - y1) * (t1 + t2) / 2;
-      const len = (dashEnd - s); // segment is straight so len = dashEnd - s exactly
+      const len = (dashEnd - s);
 
       const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
       rect.setAttribute("x", String(-len / 2));
@@ -74,7 +69,6 @@ function buildArrow(
     segStartDist += segLen;
   }
 
-  // Arrowhead — angle from second-to-last waypoint to last waypoint
   const [ex, ey] = waypoints[waypoints.length - 1];
   const [nx, ny] = waypoints[waypoints.length - 2];
   const headAngle = Math.atan2(ey - ny, ex - nx) * (180 / Math.PI);
@@ -88,7 +82,6 @@ function buildArrow(
   head.setAttribute("transform", `translate(${ex},${ey}) rotate(${headAngle})`);
   svg.insertBefore(head, ballEl);
 
-  // Place ball at start
   const startPt = pathEl.getPointAtLength(0);
   ballEl.setAttribute("cx", String(startPt.x));
   ballEl.setAttribute("cy", String(startPt.y));
@@ -188,7 +181,6 @@ export default function FlowingArrow() {
       const row3 = rel(row3El);
       const manCol = rel(manColEl);
 
-      // ── Arrow 1: woman image → V-bend → ABOVE Converting card image ──
       const a1sx = womanCol.right - womanCol.w * 0.25; 
       const a1sy = womanCol.top + womanCol.h * 0.35; 
       const a1ex = frame.cx;
@@ -196,9 +188,8 @@ export default function FlowingArrow() {
       const a1ax = Math.max(a1sx, a1ex) + 100; 
       const a1ay = a1sy + (a1ey - a1sy) * 0.3;
 
-      // ── Arrow 2: BELOW Converting image → straight line → top of man image ──
       const a2sx = frame.cx;
-      const a2sy = frame.bottom + 20;        // Start 20px below the frame
+      const a2sy = frame.bottom + 20;
       const a2ex = manCol.cx;
       const a2ey = manCol.top - 20;
 
