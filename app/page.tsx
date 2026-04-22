@@ -40,7 +40,8 @@ export default function Home() {
                   height={280}
                 />
                 <button
-                  id="fp-send-btn" disabled
+                  id="fp-send-btn"
+                  disabled
                   className="mt-3 w-full py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl text-white font-bold text-lg cursor-pointer shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300 hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Send
@@ -85,7 +86,7 @@ export default function Home() {
 
         {/* Connecting element */}
         <div className="pl-32">
-          <div className="flex gap-16 max-w-135 my-60">
+          <div className="flex gap-10 max-w-145 my-60">
             <div id="fp-converting-text" className="w-80">
               <h2 className="text-2xl font-black mb-2 leading-[1.4]">
                 ...converted at live interbank rates...
@@ -122,12 +123,20 @@ export default function Home() {
               height={580}
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Image
-                src={ManFrameImg}
-                alt="card showing chinese business"
-                width={400}
-                height={280}
-              />
+              <div className="w-100 mx-auto h-70 relative">
+                <Image
+                  src={ManFrameImg}
+                  alt="card showing chinese business"
+                  width={400}
+                  height={280}
+                />
+                <div
+                  id="fp-delivered"
+                  className="absolute top-5 right-5 px-4 py-1.5 text-sm font-semibold rounded-full backdrop-blur-md bg-accent/15 border border-accent/40 text-accent z-20"
+                >
+                  Delivered ✓
+                </div>
+              </div>
             </div>
             <div className="absolute px-10 bottom-0 left-0 w-full pb-10 bg-linear-to-t from-black/80 to-transparent rounded-2xl">
               <div className="flex items-center gap-2 mb-4">

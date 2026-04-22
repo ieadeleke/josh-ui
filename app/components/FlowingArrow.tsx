@@ -112,7 +112,9 @@ function updateArrow(
   arrow.dashes.forEach(({ el, midDist }) => {
     el.setAttribute("fill", midDist <= dist ? ACCENT : BASE);
   });
-  arrow.head.setAttribute("stroke", progress > 0.99 ? ACCENT : BASE);
+  const lastDash = arrow.dashes[arrow.dashes.length - 1];
+  const allLit = lastDash ? dist >= lastDash.midDist : progress > 0;
+  arrow.head.setAttribute("stroke", allLit ? ACCENT : BASE);
 }
 
 function teardownArrow(arrow: ArrowState) {
@@ -162,20 +164,21 @@ export default function FlowingArrow() {
       const womanColEl = document.getElementById("fp-woman-col");
       const frameEl = document.getElementById("fp-frame");
       const convertingTextEl = document.getElementById("fp-converting-text");
-      const row3El = document.getElementById("fp-row3");
       const manColEl = document.getElementById("fp-man-col");
       const text1El = document.getElementById("fp-text1");
       const text3El = document.getElementById("fp-text3");
       const sendBtnEl = document.getElementById("fp-send-btn");
       const cursorEl = document.getElementById("fp-cursor");
-      if (!womanColEl || !frameEl || !convertingTextEl || !row3El || !manColEl || !text1El || !text3El || !sendBtnEl || !cursorEl) return;
+      const deliveredEl = document.getElementById("fp-delivered");
+      if (!womanColEl || !frameEl || !convertingTextEl || !manColEl || !text1El || !text3El || !sendBtnEl || !cursorEl || !deliveredEl) return;
 
       [text1El, convertingTextEl, text3El].forEach(el => {
         el.style.transition = "color 0.8s ease";
       });
-      frameEl.style.transition = "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+      frameEl.style.opacity = "0";
       sendBtnEl.style.transition = "all 0.3s ease";
       cursorEl.style.transition = "all 0.3s ease";
+      gsap.set(deliveredEl, { opacity: 0, y: -16 });
 
       function rel(el: Element) {
         const r = el.getBoundingClientRect();
@@ -193,8 +196,6 @@ export default function FlowingArrow() {
 
       const womanCol = rel(womanColEl);
       const frame = rel(frameEl);
-      const convertingText = rel(convertingTextEl);
-      const row3 = rel(row3El);
       const manCol = rel(manColEl);
 
       const a1sx = womanCol.right - womanCol.w * 0.25; 
@@ -228,6 +229,7 @@ export default function FlowingArrow() {
 
       const baseColor = "#78716C";
       const activeColor = "#FFFFFF";
+      let deliveredIn = false;
 
       st = ScrollTrigger.create({
         trigger: container,
@@ -255,7 +257,19 @@ export default function FlowingArrow() {
             sendBtnEl.style.color = "#000000";
           }
 
-          frameEl.style.transform = p >= 0.5 ? "scale(1.15)" : "scale(1)";
+          frameEl.style.opacity = String(Math.min(1, Math.max(0, (p - 0.28) / 0.22)));
+
+          if (p >= 0.93 && !deliveredIn) {
+            deliveredIn = true;
+            gsap.fromTo(deliveredEl,
+              { opacity: 0, y: -16 },
+              { opacity: 1, y: 0, duration: 0.6, ease: "back.out(2.5)" }
+            );
+          } else if (p < 0.93 && deliveredIn) {
+            deliveredIn = false;
+            gsap.killTweensOf(deliveredEl);
+            gsap.set(deliveredEl, { opacity: 0, y: -16 });
+          }
 
           text1El.style.color = p < 0.48 ? activeColor : baseColor;
           convertingTextEl.style.color = (p >= 0.48 && p < 0.95) ? activeColor : baseColor;
