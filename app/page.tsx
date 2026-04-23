@@ -17,27 +17,55 @@ export default function Home() {
           <span className="text-accent font-black">Instantly.</span>
         </h3>
       </div>
-      <div className="relative mt-16 max-w-400 mx-auto px-20">
+      <div className="relative mt-16 max-w-400 mx-auto px-6 lg:px-20">
         <FlowingArrow />
         {/* Top-left card */}
         <div
           id="fp-row1"
-          className="flex gap-16 max-w-300 mx-auto items-center"
+          className="flex flex-col lg:flex-row gap-10 lg:gap-16 max-w-300 mx-auto items-center"
         >
-          <div id="fp-woman-col" className="flex-1 relative">
-            <Image
-              src={WomanImg}
-              alt="Business Woman posing"
-              width={940}
-              height={580}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative group max-w-[400px]">
+          <div
+            id="fp-woman-col"
+            className="w-full lg:flex-1 relative flex flex-col"
+          >
+            <div className="relative">
+              <Image
+                src={WomanImg}
+                alt="Business Woman posing"
+                width={940}
+                height={580}
+                className="w-full rounded-2xl"
+              />
+              <div className="absolute px-6 lg:px-10 bottom-0 left-0 w-full pb-6 lg:pb-10 bg-linear-to-t from-black/80 to-transparent rounded-2xl">
+                <div className="flex items-center gap-2 mb-2 lg:mb-4">
+                  <Image
+                    src={LocationIcon}
+                    alt="location icon"
+                    width={32}
+                    height={32}
+                    className="w-6 h-6 lg:w-8 lg:h-8"
+                  />
+                  <p className="text-sm lg:text-base text-white">
+                    Lagos, Nigeria
+                  </p>
+                </div>
+                <h4 className="text-lg lg:text-2xl text-white font-bold">
+                  Business Woman <span className="font-normal">&bull; </span>
+                  <span className="text-accent text-base lg:text-xl font-normal">
+                    Needs to pay her China supplier
+                  </span>
+                </h4>
+              </div>
+            </div>
+
+            <div className="lg:absolute lg:inset-0 flex items-center justify-center mt-6 lg:mt-0">
+              <div className="relative group w-full max-w-[400px]">
                 <Image
                   src={WomanFrameImg}
                   alt="card showing nigerian business"
                   width={400}
                   height={280}
+                  className="w-full"
                 />
                 <button
                   id="fp-send-btn"
@@ -56,42 +84,31 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="absolute px-10 bottom-0 left-0 w-full pb-10 bg-linear-to-t from-black/80 to-transparent rounded-2xl">
-              <div className="flex items-center gap-2 mb-4">
-                <Image
-                  src={LocationIcon}
-                  alt="location icon"
-                  width={32}
-                  height={32}
-                />
-                <p className="text-base text-white">Lagos, Nigeria</p>
-              </div>
-              <h4 className="text-2xl text-white font-bold">
-                Business Woman <span className="font-normal">&bull; </span>
-                <span className="text-accent text-xl font-normal">
-                  Needs to pay her China supplier
-                </span>
-              </h4>
-            </div>
           </div>
-          <div id="fp-text1" className="w-65 pt-32">
-            <h2 className="text-2xl font-black mb-2 leading-[1.4]">
+          <div
+            id="fp-text1"
+            className="w-full lg:w-65 text-center lg:text-left lg:pt-32"
+          >
+            <h2 className="text-xl lg:text-2xl font-black mb-2 leading-[1.4]">
               Funds leave your Yolat wallet in NGN...
             </h2>
-            <p className="text-base leading-normal">
+            <p className="text-sm lg:text-base leading-normal">
               Converted at real-time exchange rates. No hidden spreads.
             </p>
           </div>
         </div>
 
         {/* Connecting element */}
-        <div className="pl-32">
-          <div className="flex gap-10 max-w-145 my-60">
-            <div id="fp-converting-text" className="w-80">
-              <h2 className="text-2xl font-black mb-2 leading-[1.4]">
+        <div className="lg:pl-32">
+          <div className="flex flex-col lg:flex-row gap-5 lg:gap-14 max-w-145 my-80 lg:my-60 items-center lg:items-start">
+            <div
+              id="fp-converting-text"
+              className="w-full lg:w-80 text-center lg:text-left"
+            >
+              <h2 className="text-xl lg:text-2xl font-black mb-2 leading-[1.4]">
                 ...converted at live interbank rates...
               </h2>
-              <p className="text-base leading-normal">
+              <p className="text-sm lg:text-base leading-normal">
                 You see exactly how much lands on the other side before
                 confirming
               </p>
@@ -102,58 +119,77 @@ export default function Home() {
               alt="frame"
               width={281}
               height={213}
+              className="w-48 lg:w-[281px]"
             />
           </div>
         </div>
+
         {/* Bottom-right card */}
-        <div id="fp-row3" className="flex gap-16 max-w-300 mx-auto mt-60">
-          <div id="fp-text3" className="w-65 pt-20">
-            <h2 className="text-2xl font-black mb-2 leading-[1.4]">
+        <div
+          id="fp-row3"
+          className="flex flex-col lg:flex-row gap-7 lg:gap-16 max-w-300 mx-auto mt-80 lg:mt-60 items-center"
+        >
+          <div
+            id="fp-text3"
+            className="w-full lg:w-65 text-center lg:text-left lg:pt-20"
+          >
+            <h2 className="text-xl lg:text-2xl font-black mb-2 leading-[1.4]">
               ...and arrives within seconds. Every time
             </h2>
-            <p className="text-base leading-normal w-[80%]">
+            <p className="text-sm lg:text-base leading-normal mx-auto lg:mx-0 lg:w-[80%]">
               Your recipient is notified instantly. You get a full receipt
             </p>
           </div>
-          <div id="fp-man-col" className="flex-1 relative">
-            <Image
-              src={ManImg}
-              alt="Business man smiling"
-              width={940}
-              height={580}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-100 mx-auto h-70 relative">
+          <div
+            id="fp-man-col"
+            className="w-full lg:flex-1 relative flex flex-col"
+          >
+            <div className="relative">
+              <Image
+                src={ManImg}
+                alt="Business man smiling"
+                width={940}
+                height={580}
+                className="w-full rounded-2xl"
+              />
+              <div className="absolute px-6 lg:px-10 bottom-0 left-0 w-full pb-6 lg:pb-10 bg-linear-to-t from-black/80 to-transparent rounded-2xl">
+                <div className="flex items-center gap-2 mb-2 lg:mb-4">
+                  <Image
+                    src={LocationIcon}
+                    alt="location icon"
+                    width={32}
+                    height={32}
+                    className="w-6 h-6 lg:w-8 lg:h-8"
+                  />
+                  <p className="text-sm lg:text-base text-white">
+                    Beijing, China
+                  </p>
+                </div>
+                <h4 className="text-lg lg:text-2xl text-white font-bold">
+                  China Supplier <span className="font-normal">&bull; </span>
+                  <span className="text-accent text-base lg:text-xl font-normal">
+                    Receives payment from Nigeria
+                  </span>
+                </h4>
+              </div>
+            </div>
+
+            <div className="lg:absolute lg:inset-0 flex items-center justify-center mt-6 lg:mt-0">
+              <div className="w-full max-w-[400px] mx-auto relative">
                 <Image
                   src={ManFrameImg}
                   alt="card showing chinese business"
                   width={400}
                   height={280}
+                  className="w-full"
                 />
                 <div
                   id="fp-delivered"
-                  className="absolute top-5 right-5 px-4 py-1.5 text-sm font-semibold rounded-full backdrop-blur-md bg-accent/15 border border-accent/40 text-accent z-20"
+                  className="absolute top-5 right-5 px-4 py-1.5 text-xs lg:text-sm font-semibold rounded-full backdrop-blur-md bg-accent/15 border border-accent/40 text-accent z-20"
                 >
                   Delivered ✓
                 </div>
               </div>
-            </div>
-            <div className="absolute px-10 bottom-0 left-0 w-full pb-10 bg-linear-to-t from-black/80 to-transparent rounded-2xl">
-              <div className="flex items-center gap-2 mb-4">
-                <Image
-                  src={LocationIcon}
-                  alt="location icon"
-                  width={32}
-                  height={32}
-                />
-                <p className="text-base text-white">Beijing, China</p>
-              </div>
-              <h4 className="text-2xl text-white font-bold">
-                China Supplier <span className="font-normal">&bull; </span>
-                <span className="text-accent text-xl font-normal">
-                  Receives payment from Nigeria
-                </span>
-              </h4>
             </div>
           </div>
         </div>

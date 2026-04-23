@@ -40,6 +40,7 @@ function buildArrow(
     const [x1, y1] = waypoints[seg];
     const [x2, y2] = waypoints[seg + 1];
     const segLen = Math.hypot(x2 - x1, y2 - y1);
+    
     const isLastSeg = seg === waypoints.length - 2;
     const finalGap = isLastSeg ? 20 : 0;
     const effectiveLen = segLen - finalGap;
@@ -109,12 +110,13 @@ function updateArrow(
   ballEl.setAttribute("opacity", op);
   glowEl.setAttribute("opacity", op);
 
+  const lastDash = arrow.dashes[arrow.dashes.length - 1];
+  const headThreshold = lastDash ? lastDash.midDist : arrow.totalLen * 0.95;
+
   arrow.dashes.forEach(({ el, midDist }) => {
     el.setAttribute("fill", midDist <= dist ? ACCENT : BASE);
   });
-  const lastDash = arrow.dashes[arrow.dashes.length - 1];
-  const allLit = lastDash ? dist >= lastDash.midDist : progress > 0;
-  arrow.head.setAttribute("stroke", allLit ? ACCENT : BASE);
+  arrow.head.setAttribute("stroke", dist >= headThreshold ? ACCENT : BASE);
 }
 
 function teardownArrow(arrow: ArrowState) {
@@ -164,21 +166,22 @@ export default function FlowingArrow() {
       const womanColEl = document.getElementById("fp-woman-col");
       const frameEl = document.getElementById("fp-frame");
       const convertingTextEl = document.getElementById("fp-converting-text");
+      const row3El = document.getElementById("fp-row3");
       const manColEl = document.getElementById("fp-man-col");
       const text1El = document.getElementById("fp-text1");
       const text3El = document.getElementById("fp-text3");
       const sendBtnEl = document.getElementById("fp-send-btn");
       const cursorEl = document.getElementById("fp-cursor");
-      const deliveredEl = document.getElementById("fp-delivered");
-      if (!womanColEl || !frameEl || !convertingTextEl || !manColEl || !text1El || !text3El || !sendBtnEl || !cursorEl || !deliveredEl) return;
+
+      if (!womanColEl || !frameEl || !convertingTextEl || !row3El || !manColEl || !text1El || !text3El || !sendBtnEl || !cursorEl) return;
 
       [text1El, convertingTextEl, text3El].forEach(el => {
         el.style.transition = "color 0.8s ease";
       });
+      frameEl.style.transition = "opacity 0.6s ease";
       frameEl.style.opacity = "0";
       sendBtnEl.style.transition = "all 0.3s ease";
       cursorEl.style.transition = "all 0.3s ease";
-      gsap.set(deliveredEl, { opacity: 0, y: -16 });
 
       function rel(el: Element) {
         const r = el.getBoundingClientRect();
@@ -196,19 +199,24 @@ export default function FlowingArrow() {
 
       const womanCol = rel(womanColEl);
       const frame = rel(frameEl);
+      const convertingText = rel(convertingTextEl);
       const manCol = rel(manColEl);
+      const text1 = rel(text1El);
+      const text3 = rel(text3El);
 
-      const a1sx = womanCol.right - womanCol.w * 0.25; 
-      const a1sy = womanCol.top + womanCol.h * 0.35; 
-      const a1ex = frame.cx;
-      const a1ey = frame.top - 20;
-      const a1ax = Math.max(a1sx, a1ex) + 100; 
-      const a1ay = a1sy + (a1ey - a1sy) * 0.3;
+      const isMobile = window.innerWidth < 1024;
+
+      const a1sx = isMobile ? text1.cx : womanCol.right - womanCol.w * 0.25; 
+      const a1sy = isMobile ? text1.bottom + 40 : womanCol.top + womanCol.h * 0.35; 
+      const a1ex = isMobile ? convertingText.cx : frame.cx;
+      const a1ey = isMobile ? convertingText.top - 40 : frame.top;
+      const a1ax = isMobile ? Math.max(a1sx, a1ex) + 40 : Math.max(a1sx, a1ex) + 100; 
+      const a1ay = a1sy + (a1ey - a1sy) * (isMobile ? 0.4 : 0.3);
 
       const a2sx = frame.cx;
-      const a2sy = frame.bottom + 20;
-      const a2ex = manCol.cx;
-      const a2ey = manCol.top - 20;
+      const a2sy = isMobile ? frame.bottom + 40 : frame.bottom + 20;
+      const a2ex = isMobile ? text3.cx : manCol.cx;
+      const a2ey = isMobile ? text3.top - 40 : manCol.top - 20;
 
       arrow1 = buildArrow(svgEl, p1, b1, g1, [
         [a1sx, a1sy],
@@ -229,12 +237,11 @@ export default function FlowingArrow() {
 
       const baseColor = "#78716C";
       const activeColor = "#FFFFFF";
-      let deliveredIn = false;
 
       st = ScrollTrigger.create({
         trigger: container,
-        start: "top 20%",
-        end: "bottom 80%",
+        start: isMobile ? "top 10%" : "top 20%",
+        end: isMobile ? "bottom 90%" : "bottom 80%",
         scrub: 1,
         onUpdate(self) {
           const p = self.progress;
@@ -257,19 +264,7 @@ export default function FlowingArrow() {
             sendBtnEl.style.color = "#000000";
           }
 
-          frameEl.style.opacity = String(Math.min(1, Math.max(0, (p - 0.28) / 0.22)));
-
-          if (p >= 0.93 && !deliveredIn) {
-            deliveredIn = true;
-            gsap.fromTo(deliveredEl,
-              { opacity: 0, y: -16 },
-              { opacity: 1, y: 0, duration: 0.6, ease: "back.out(2.5)" }
-            );
-          } else if (p < 0.93 && deliveredIn) {
-            deliveredIn = false;
-            gsap.killTweensOf(deliveredEl);
-            gsap.set(deliveredEl, { opacity: 0, y: -16 });
-          }
+          frameEl.style.opacity = p >= 0.5 ? "1" : "0";
 
           text1El.style.color = p < 0.48 ? activeColor : baseColor;
           convertingTextEl.style.color = (p >= 0.48 && p < 0.95) ? activeColor : baseColor;
