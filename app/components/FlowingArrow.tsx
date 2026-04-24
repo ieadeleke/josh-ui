@@ -235,7 +235,7 @@ export default function FlowingArrow() {
       const a2sx = frame.cx;
       const a2sy = frame.bottom + 20;
       const a2ex = manCol.cx;
-      const a2ey = manCol.top - 10;
+      const a2ey = manCol.top - 20;
 
       arrow1 = buildArrow(svgEl, p1, b1, g1, [
         [a1sx, a1sy],
