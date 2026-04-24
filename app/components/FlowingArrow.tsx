@@ -228,7 +228,7 @@ export default function FlowingArrow() {
       const a1sx = womanCol.right - womanCol.w * 0.25;
       const a1sy = womanCol.top + womanCol.h * 0.35;
       const a1ex = frame.cx;
-      const a1ey = frame.top;
+      const a1ey = frame.top - 20;
       const a1ax = Math.max(a1sx, a1ex) + 100;
       const a1ay = a1sy + (a1ey - a1sy) * 0.3;
 
