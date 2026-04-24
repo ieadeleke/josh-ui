@@ -127,7 +127,7 @@ export default function Home() {
         {/* Bottom-right card */}
         <div
           id="fp-row3"
-          className="flex flex-col lg:flex-row gap-7 lg:gap-16 max-w-300 mx-auto mt-0 lg:mt-60 lg:items-center"
+          className="flex flex-col lg:flex-row gap-7 lg:gap-16 max-w-300 mx-auto mt-0 lg:mt-60"
         >
           <div className="pl-5 lg:pl-0">
             <div
