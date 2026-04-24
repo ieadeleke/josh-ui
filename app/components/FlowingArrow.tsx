@@ -26,9 +26,11 @@ function buildArrow(
   pathEl: SVGPathElement,
   ballEl: SVGCircleElement,
   glowEl: SVGCircleElement,
-  waypoints: [number, number][]
+  waypoints: [number, number][],
 ): ArrowState {
-  const d = waypoints.map(([x, y], i) => `${i === 0 ? "M" : "L"} ${x} ${y}`).join(" ");
+  const d = waypoints
+    .map(([x, y], i) => `${i === 0 ? "M" : "L"} ${x} ${y}`)
+    .join(" ");
   pathEl.setAttribute("d", d);
   const totalLen = pathEl.getTotalLength();
 
@@ -40,7 +42,7 @@ function buildArrow(
     const [x1, y1] = waypoints[seg];
     const [x2, y2] = waypoints[seg + 1];
     const segLen = Math.hypot(x2 - x1, y2 - y1);
-    
+
     const isLastSeg = seg === waypoints.length - 2;
     const finalGap = isLastSeg ? 20 : 0;
     const effectiveLen = segLen - finalGap;
@@ -50,11 +52,14 @@ function buildArrow(
       const dashEnd = Math.min(s + DASH_LEN, segLen);
       const t1 = s / segLen;
       const t2 = dashEnd / segLen;
-      const cx = x1 + (x2 - x1) * (t1 + t2) / 2;
-      const cy = y1 + (y2 - y1) * (t1 + t2) / 2;
-      const len = (dashEnd - s);
+      const cx = x1 + ((x2 - x1) * (t1 + t2)) / 2;
+      const cy = y1 + ((y2 - y1) * (t1 + t2)) / 2;
+      const len = dashEnd - s;
 
-      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      const rect = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "rect",
+      );
       rect.setAttribute("x", String(-len / 2));
       rect.setAttribute("y", String(-DASH_W / 2));
       rect.setAttribute("width", String(len));
@@ -73,7 +78,10 @@ function buildArrow(
   const [ex, ey] = waypoints[waypoints.length - 1];
   const [nx, ny] = waypoints[waypoints.length - 2];
   const headAngle = Math.atan2(ey - ny, ex - nx) * (180 / Math.PI);
-  const head = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+  const head = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "polyline",
+  );
   head.setAttribute("points", ARROW_HEAD_PTS);
   head.setAttribute("fill", "none");
   head.setAttribute("stroke", BASE);
@@ -97,7 +105,7 @@ function updateArrow(
   pathEl: SVGPathElement,
   ballEl: SVGCircleElement,
   glowEl: SVGCircleElement,
-  progress: number
+  progress: number,
 ) {
   const dist = progress * arrow.totalLen;
   const pt = pathEl.getPointAtLength(dist);
@@ -173,9 +181,20 @@ export default function FlowingArrow() {
       const sendBtnEl = document.getElementById("fp-send-btn");
       const cursorEl = document.getElementById("fp-cursor");
 
-      if (!womanColEl || !frameEl || !convertingTextEl || !row3El || !manColEl || !text1El || !text3El || !sendBtnEl || !cursorEl) return;
+      if (
+        !womanColEl ||
+        !frameEl ||
+        !convertingTextEl ||
+        !row3El ||
+        !manColEl ||
+        !text1El ||
+        !text3El ||
+        !sendBtnEl ||
+        !cursorEl
+      )
+        return;
 
-      [text1El, convertingTextEl, text3El].forEach(el => {
+      [text1El, convertingTextEl, text3El].forEach((el) => {
         el.style.transition = "color 0.8s ease";
       });
       frameEl.style.transition = "opacity 0.6s ease";
@@ -206,17 +225,17 @@ export default function FlowingArrow() {
 
       const isMobile = window.innerWidth < 1024;
 
-      const a1sx = isMobile ? text1.cx : womanCol.right - womanCol.w * 0.25; 
-      const a1sy = isMobile ? text1.bottom + 40 : womanCol.top + womanCol.h * 0.35; 
-      const a1ex = isMobile ? convertingText.cx : frame.cx;
-      const a1ey = isMobile ? convertingText.top - 40 : frame.top;
-      const a1ax = isMobile ? Math.max(a1sx, a1ex) + 40 : Math.max(a1sx, a1ex) + 100; 
-      const a1ay = a1sy + (a1ey - a1sy) * (isMobile ? 0.4 : 0.3);
+      const a1sx = womanCol.right - womanCol.w * 0.25;
+      const a1sy = womanCol.top + womanCol.h * 0.35;
+      const a1ex = frame.cx;
+      const a1ey = frame.top;
+      const a1ax = Math.max(a1sx, a1ex) + 100;
+      const a1ay = a1sy + (a1ey - a1sy) * 0.3;
 
       const a2sx = frame.cx;
-      const a2sy = isMobile ? frame.bottom + 40 : frame.bottom + 20;
-      const a2ex = isMobile ? text3.cx : manCol.cx;
-      const a2ey = isMobile ? text3.top - 40 : manCol.top - 20;
+      const a2sy = frame.bottom + 20;
+      const a2ex = manCol.cx;
+      const a2ey = manCol.top - 10;
 
       arrow1 = buildArrow(svgEl, p1, b1, g1, [
         [a1sx, a1sy],
@@ -267,7 +286,8 @@ export default function FlowingArrow() {
           frameEl.style.opacity = p >= 0.5 ? "1" : "0";
 
           text1El.style.color = p < 0.48 ? activeColor : baseColor;
-          convertingTextEl.style.color = (p >= 0.48 && p < 0.95) ? activeColor : baseColor;
+          convertingTextEl.style.color =
+            p >= 0.48 && p < 0.95 ? activeColor : baseColor;
           text3El.style.color = p >= 0.95 ? activeColor : baseColor;
 
           const ballP = p < 0.15 ? 0 : (p - 0.15) / 0.85;
@@ -316,7 +336,13 @@ export default function FlowingArrow() {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-        <filter id="ambient-glow" x="-100%" y="-100%" width="300%" height="300%">
+        <filter
+          id="ambient-glow"
+          x="-100%"
+          y="-100%"
+          width="300%"
+          height="300%"
+        >
           <feGaussianBlur stdDeviation="18" />
         </filter>
       </defs>
@@ -324,11 +350,35 @@ export default function FlowingArrow() {
       <path ref={p1Ref} fill="none" stroke="none" />
       <path ref={p2Ref} fill="none" stroke="none" />
 
-      <circle ref={g1Ref} r="40" fill="#64FFAE" fillOpacity="0.08" filter="url(#ambient-glow)" />
-      <circle ref={g2Ref} r="40" fill="#64FFAE" fillOpacity="0.08" filter="url(#ambient-glow)" />
+      <circle
+        ref={g1Ref}
+        r="40"
+        fill="#64FFAE"
+        fillOpacity="0.08"
+        filter="url(#ambient-glow)"
+      />
+      <circle
+        ref={g2Ref}
+        r="40"
+        fill="#64FFAE"
+        fillOpacity="0.08"
+        filter="url(#ambient-glow)"
+      />
 
-      <circle ref={b1Ref} r="7" fill="#64FFAE" filter="url(#ball-glow)" opacity="0" />
-      <circle ref={b2Ref} r="7" fill="#64FFAE" filter="url(#ball-glow)" opacity="0" />
+      <circle
+        ref={b1Ref}
+        r="7"
+        fill="#64FFAE"
+        filter="url(#ball-glow)"
+        opacity="0"
+      />
+      <circle
+        ref={b2Ref}
+        r="7"
+        fill="#64FFAE"
+        filter="url(#ball-glow)"
+        opacity="0"
+      />
     </svg>
   );
 }
