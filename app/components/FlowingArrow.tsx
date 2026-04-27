@@ -195,12 +195,19 @@ export default function FlowingArrow() {
         return;
 
       [text1El, convertingTextEl, text3El].forEach((el) => {
-        el.style.transition = "color 0.8s ease";
+        el.style.opacity = "0";
       });
-      frameEl.style.transition = "opacity 0.6s ease";
       frameEl.style.opacity = "0";
       sendBtnEl.style.transition = "all 0.3s ease";
       cursorEl.style.transition = "all 0.3s ease";
+
+      // Apply transitions after a brief delay to avoid flash/fade-out on load
+      setTimeout(() => {
+        [text1El, convertingTextEl, text3El].forEach((el) => {
+          el.style.transition = "color 0.8s ease, opacity 0.8s ease";
+        });
+        frameEl.style.transition = "opacity 0.6s ease";
+      }, 50);
 
       function rel(el: Element) {
         const r = el.getBoundingClientRect();
@@ -283,12 +290,22 @@ export default function FlowingArrow() {
             sendBtnEl.style.color = "#000000";
           }
 
-          frameEl.style.opacity = p >= 0.5 ? "1" : "0";
-
           text1El.style.color = p < 0.48 ? activeColor : baseColor;
           convertingTextEl.style.color =
             p >= 0.48 && p < 0.95 ? activeColor : baseColor;
           text3El.style.color = p >= 0.95 ? activeColor : baseColor;
+
+          // Opacity Reveal Logic
+          // First text fades in after click finishes
+          text1El.style.opacity = p > 0.14 ? "1" : "0";
+          
+          // Second text and frame fade in when ball reaches the end of the first arrow (approx p=0.55)
+          const secondTrigger = 0.55;
+          convertingTextEl.style.opacity = p >= secondTrigger ? "1" : "0";
+          frameEl.style.opacity = p >= secondTrigger ? "1" : "0";
+          
+          // Third text fades in when ball reaches the end of the second arrow (approx p=0.95)
+          text3El.style.opacity = p >= 0.95 ? "1" : "0";
 
           const ballP = p < 0.15 ? 0 : (p - 0.15) / 0.85;
 

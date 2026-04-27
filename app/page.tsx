@@ -88,6 +88,7 @@ export default function Home() {
           <div
             id="fp-text1"
             className="hidden lg:block w-full lg:w-65 text-center lg:text-left lg:pt-32"
+            style={{ opacity: 0 }}
           >
             <h2 className="text-xl lg:text-2xl font-black mb-2 leading-[1.4]">
               Funds leave your Yolat wallet in NGN...
@@ -104,6 +105,7 @@ export default function Home() {
             <div
               id="fp-converting-text"
               className="max-w-50 lg:max-w-75 lg:w-80"
+              style={{ opacity: 0 }}
             >
               <h2 className="text-xl lg:text-2xl font-black mb-2 leading-[1.4]">
                 ...converted at live interbank rates...
@@ -120,6 +122,7 @@ export default function Home() {
               width={281}
               height={213}
               className="w-64 block mx-auto ml-20 lg:ml-0 lg:mx-0"
+              style={{ opacity: 0 }}
             />
           </div>
         </div>
@@ -133,6 +136,7 @@ export default function Home() {
             <div
               id="fp-text3"
               className="max-w-50 lg:max-w-75 w-full lg:w-65 lg:pt-20"
+              style={{ opacity: 0 }}
             >
               <h2 className="text-xl lg:text-2xl font-black mb-2 leading-[1.4]">
                 ...and arrives within seconds. Every time
