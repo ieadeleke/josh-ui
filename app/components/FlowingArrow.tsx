@@ -180,6 +180,8 @@ export default function FlowingArrow() {
       const text3El = document.getElementById("fp-text3");
       const sendBtnEl = document.getElementById("fp-send-btn");
       const cursorEl = document.getElementById("fp-cursor");
+      const womanCardEl = document.getElementById("fp-woman-card");
+      const manCardEl = document.getElementById("fp-man-card");
 
       if (
         !womanColEl ||
@@ -190,7 +192,9 @@ export default function FlowingArrow() {
         !text1El ||
         !text3El ||
         !sendBtnEl ||
-        !cursorEl
+        !cursorEl ||
+        !womanCardEl ||
+        !manCardEl
       )
         return;
 
@@ -198,6 +202,9 @@ export default function FlowingArrow() {
         el.style.opacity = "0";
       });
       frameEl.style.opacity = "0";
+      womanCardEl.style.opacity = "1";
+      manCardEl.style.opacity = "0";
+      manCardEl.style.transform = "scale(0.8)";
       sendBtnEl.style.transition = "all 0.3s ease";
       cursorEl.style.transition = "all 0.3s ease";
 
@@ -206,6 +213,9 @@ export default function FlowingArrow() {
           el.style.transition = "color 0.8s ease, opacity 0.8s ease";
         });
         frameEl.style.transition = "opacity 0.6s ease";
+        womanCardEl.style.transition = "opacity 0.6s ease";
+        manCardEl.style.transition =
+          "opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)";
       }, 50);
 
       function rel(el: Element) {
@@ -265,16 +275,17 @@ export default function FlowingArrow() {
 
       st = ScrollTrigger.create({
         trigger: container,
-        start: isMobile ? "top 10%" : "top 20%",
+        start: isMobile ? "top 80%" : "top 40%",
         end: isMobile ? "bottom 90%" : "bottom 80%",
-        scrub: 1,
+        scrub: 0.5,
         onUpdate(self) {
           const p = self.progress;
 
-          if (p < 0.15) {
-            const clickP = p / 0.15;
+          if (p < 0.08) {
+            const clickP = p / 0.08;
             cursorEl.style.transform = `scale(${1 - clickP * 0.2})`;
             cursorEl.style.opacity = "1";
+            womanCardEl.style.opacity = "1";
             if (clickP > 0.8) {
               sendBtnEl.style.backgroundColor = ACCENT;
               sendBtnEl.style.color = "#000000";
@@ -282,24 +293,32 @@ export default function FlowingArrow() {
               sendBtnEl.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
               sendBtnEl.style.color = "#FFFFFF";
             }
-          } else {
-            cursorEl.style.transform = "scale(1)";
+          } 
+          else if (p < 0.15) {
+            const disappearP = (p - 0.08) / 0.07;
+            cursorEl.style.opacity = String(1 - disappearP);
+            womanCardEl.style.opacity = String(1 - disappearP);
+          }
+          else {
             cursorEl.style.opacity = "0";
-            sendBtnEl.style.backgroundColor = ACCENT;
-            sendBtnEl.style.color = "#000000";
+            womanCardEl.style.opacity = "0";
           }
 
-          text1El.style.color = p < 0.48 ? activeColor : baseColor;
+          text1El.style.color = p < 0.5 ? activeColor : baseColor;
           convertingTextEl.style.color =
-            p >= 0.48 && p < 0.95 ? activeColor : baseColor;
+            p >= 0.5 && p < 0.95 ? activeColor : baseColor;
           text3El.style.color = p >= 0.95 ? activeColor : baseColor;
 
-          text1El.style.opacity = p > 0.14 ? "1" : "0";
+          text1El.style.opacity = p > 0.12 ? "1" : "0";
           
-          const secondTrigger = 0.55;
-          convertingTextEl.style.opacity = p >= secondTrigger ? "1" : "0";
-          frameEl.style.opacity = p >= secondTrigger ? "1" : "0";
-          text3El.style.opacity = p >= 0.95 ? "1" : "0";
+          frameEl.style.opacity = p >= 0.51 ? "1" : "0";
+          convertingTextEl.style.opacity = p >= 0.575 ? "1" : "0";
+          
+          const manCardTrigger = 0.92;
+          manCardEl.style.opacity = p >= manCardTrigger ? "1" : "0";
+          manCardEl.style.transform = p >= manCardTrigger ? "scale(1)" : "scale(0.8)";
+          
+          text3El.style.opacity = p >= 0.96 ? "1" : "0";
 
           const ballP = p < 0.15 ? 0 : (p - 0.15) / 0.85;
 

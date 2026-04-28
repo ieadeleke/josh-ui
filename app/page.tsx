@@ -59,7 +59,11 @@ export default function Home() {
             </div>
 
             <div className="absolute inset-0 flex items-center justify-center lg:mt-0">
-              <div className="relative group w-full max-w-[163px] lg:max-w-[400px]">
+              <div
+                id="fp-woman-card"
+                className="relative group w-full max-w-[163px] lg:max-w-[400px]"
+                style={{ opacity: 1 }}
+              >
                 <Image
                   src={WomanFrameImg}
                   alt="card showing nigerian business"
@@ -71,6 +75,7 @@ export default function Home() {
                   id="fp-send-btn"
                   disabled
                   className="mt-3 w-full py-1 md:py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg md:rounded-2xl text-white md:font-bold text-sm md:text-lg cursor-pointer shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300 hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98]"
+                  style={{ opacity: 1 }}
                 >
                   Send
                 </button>
@@ -181,7 +186,11 @@ export default function Home() {
             </div>
 
             <div className="absolute inset-0 flex items-center justify-center mt-0">
-              <div className="w-full max-w-[163px] lg:max-w-[400px] mx-auto relative">
+              <div
+                id="fp-man-card"
+                className="w-full max-w-[163px] lg:max-w-[400px] mx-auto relative"
+                style={{ opacity: 0, transform: "scale(0.8)" }}
+              >
                 <Image
                   src={ManFrameImg}
                   alt="card showing chinese business"
