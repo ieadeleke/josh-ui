@@ -209,6 +209,12 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+<br/>
+<br/>
+            <div className="relative  mx-auto mt-[50px] md:mt-[110px]  px-2 sm:px-0">
+            <TestimonialsSection />
+          </div>
     </section>
   );
 }
