@@ -224,13 +224,15 @@ export default function TestimonialsSection() {
             const dirSign = direction === "next" ? 1 : -1;
 
             const fanAngle = isFanning ? (FAN_ANGLES[i] ?? 0) * dirSign : 0;
-            const fanY = isFanning ? FAN_Y[i] ?? 0 : 0;
             const fanX = isFanning ? (FAN_X[i] ?? 0) * dirSign : 0;
             
             // Enhanced throw-away animation for the top card
             const throwX = isLifting && phase === "fan" ? 200 * dirSign : 0;
             const throwRotate = isLifting && phase === "fan" ? 15 * dirSign : 0;
             const throwOpacity = isLifting && phase === "fan" ? 0 : 1;
+
+            const targetY = isTop ? 0 : layer.y;
+            const targetScale = isTop ? 1 : layer.scaleX;
 
             return (
               <motion.div
@@ -252,19 +254,11 @@ export default function TestimonialsSection() {
                         scale: 1.05,
                         opacity: throwOpacity,
                       }
-                    : isFanning
-                    ? {
-                        x: fanX,
-                        y: fanY,
-                        rotate: fanAngle,
-                        scale: isTop ? 1 : layer.scaleX,
-                        opacity: 1,
-                      }
                     : {
-                        x: 0,
-                        y: isTop ? 0 : layer.y,
-                        rotate: 0,
-                        scale: isTop ? 1 : layer.scaleX,
+                        x: isFanning ? fanX : 0,
+                        y: targetY,
+                        rotate: isFanning ? fanAngle : 0,
+                        scale: targetScale,
                         opacity: 1,
                       }
                 }
@@ -273,7 +267,7 @@ export default function TestimonialsSection() {
                   stiffness: isFanning ? 250 : 300,
                   damping: isFanning ? 25 : 30,
                   mass: 0.8,
-                  opacity: { duration: 0.5 },
+                  opacity: { duration: 0.4 },
                 }}
               >
                 {isTop && (
