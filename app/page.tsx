@@ -7,6 +7,7 @@ import FrameImg from "../images/frame.png";
 import LocationIcon from "../images/location.svg";
 import CursorImg from "../images/cursor.png";
 import FlowingArrow from "./components/FlowingArrow";
+import TestimonialsSection from "./components/TestimonialsSection";
 
 export default function Home() {
   return (
@@ -210,11 +211,11 @@ export default function Home() {
         </div>
       </div>
 
-<br/>
-<br/>
-            <div className="relative  mx-auto mt-[50px] md:mt-[110px]  px-2 sm:px-0">
-            <TestimonialsSection />
-          </div>
+      <br />
+      <br />
+      <div className="relative  mx-auto mt-[50px] md:mt-[110px]  px-2 sm:px-0">
+        <TestimonialsSection />
+      </div>
     </section>
   );
 }

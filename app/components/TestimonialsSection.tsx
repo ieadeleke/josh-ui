@@ -145,11 +145,11 @@ function ArrowRight() {
 
 const STACK_LAYERS = [
   // [0] closest to top card
-  { height: "95%", y: 6, scaleX: 0.97, zIndex: 3 },
+  { y: 12, scaleX: 0.96, zIndex: 3 },
   // [1] middle
-  { height: "90%", y: 12, scaleX: 0.93, zIndex: 2 },
+  { y: 24, scaleX: 0.92, zIndex: 2 },
   // [2] deepest
-  { height: "84%", y: 22, scaleX: 0.86, zIndex: 1 },
+  { y: 36, scaleX: 0.88, zIndex: 1 },
 ] as const;
 
 
@@ -204,61 +204,76 @@ export default function TestimonialsSection() {
   const isFanning = phase === "fan" || phase === "shuffle";
 
   return (
-
-
-
+    <div className="w-full">
       <div className="relative max-w-3xl mx-auto flex flex-col items-center gap-10">
         {/* Badge */}
   
         {/* ── Card Stack ── */}
-        <div
-          className="relative w-full max-w-[670px] mx-auto h-[297px] md:h-[350px]"
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative w-full max-w-[670px] mx-auto h-[297px] md:h-[357px]"
         >
           {cards.map((card, i) => {
             const fromTop = cards.length - 1 - i;
             const isTop = fromTop === 0;
             const isLifting = card.id === liftingId && isTop;
-            const layer = STACK_LAYERS[Math.max(fromTop - 1, 0)];
+            const layer = STACK_LAYERS[Math.min(Math.max(fromTop - 1, 0), STACK_LAYERS.length - 1)];
             const dirSign = direction === "next" ? 1 : -1;
 
             const fanAngle = isFanning ? (FAN_ANGLES[i] ?? 0) * dirSign : 0;
             const fanY = isFanning ? FAN_Y[i] ?? 0 : 0;
             const fanX = isFanning ? (FAN_X[i] ?? 0) * dirSign : 0;
-            const liftY = isLifting && phase === "fan" ? -26 : 0;
+            
+            // Enhanced throw-away animation for the top card
+            const throwX = isLifting && phase === "fan" ? 200 * dirSign : 0;
+            const throwRotate = isLifting && phase === "fan" ? 15 * dirSign : 0;
+            const throwOpacity = isLifting && phase === "fan" ? 0 : 1;
 
             return (
               <motion.div
-                key={`${card.id}-${i}`}
-                className={`absolute inset-x-0 bottom-0 rounded-[16px] md:rounded-[22px] ${
-                  isTop ? "md:p-8 p-5 flex flex-col justify-between min-h-[297px] md:h-[357px] h-[297px]" : ""
-                }`}
+                key={card.id}
+                layout
+                className="absolute inset-x-0 top-0 rounded-[16px] md:rounded-[22px] md:p-8 p-5 flex flex-col justify-between h-[297px] md:h-[357px]"
                 style={{
                   zIndex: i + 1,
                   transformOrigin: "bottom center",
                   willChange: "transform",
-                  background: isTop ? card.cardColor : current.stackColors[Math.max(fromTop - 1, 0)],
-                  height: isTop ? undefined : layer.height,
+                  background: isTop ? card.cardColor : current.stackColors[Math.min(fromTop - 1, current.stackColors.length - 1)],
                 }}
                 animate={
-                  isFanning
+                  isLifting && phase === "fan"
+                    ? {
+                        x: throwX,
+                        y: 60,
+                        rotate: throwRotate,
+                        scale: 1.05,
+                        opacity: throwOpacity,
+                      }
+                    : isFanning
                     ? {
                         x: fanX,
-                        y: fanY + liftY,
+                        y: fanY,
                         rotate: fanAngle,
-                          scale: 1,
+                        scale: isTop ? 1 : layer.scaleX,
+                        opacity: 1,
                       }
                     : {
                         x: 0,
                         y: isTop ? 0 : layer.y,
                         rotate: 0,
                         scale: isTop ? 1 : layer.scaleX,
+                        opacity: 1,
                       }
                 }
                 transition={{
                   type: "spring",
-                  stiffness: isFanning ? 280 : 320,
-                  damping: isFanning ? 22 : 28,
-                  mass: isFanning ? 0.8 : 0.7,
+                  stiffness: isFanning ? 250 : 300,
+                  damping: isFanning ? 25 : 30,
+                  mass: 0.8,
+                  opacity: { duration: 0.5 },
                 }}
               >
                 {isTop && (
@@ -296,7 +311,7 @@ export default function TestimonialsSection() {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Navigation */}
         <div className="flex items-center gap-3 mt-2">
@@ -335,6 +350,6 @@ export default function TestimonialsSection() {
           </motion.button>
         </div>
       </div>
-
+    </div>
   );
 }
