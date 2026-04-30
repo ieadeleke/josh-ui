@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -197,6 +197,17 @@ export default function TestimonialsSection() {
 
   const shuffleNext = useCallback(() => runShuffle("next"), [runShuffle]);
   const shufflePrev = useCallback(() => runShuffle("prev"), [runShuffle]);
+
+  // Auto-play effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isAnimating) {
+        shuffleNext();
+      }
+    }, 5000); // Shuffle every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [shuffleNext, isAnimating]);
 
   const current = cards[cards.length - 1];
   const isFanning = phase === "fan" || phase === "shuffle";
