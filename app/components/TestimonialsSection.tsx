@@ -306,17 +306,17 @@ export default function TestimonialsSection() {
         </motion.div>
 
         {/* Navigation */}
-        <div className="flex items-center gap-3 mt-2">
+        <div className="flex items-center gap-3 mt-8">
           <motion.button
             onClick={shufflePrev}
             whileTap={{ scale: 0.91 }}
             whileHover={{ scale: 1.07 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="w-11 h-11 rounded-full flex items-center justify-center border"
+            className="w-12 h-12 rounded-full flex items-center justify-center border"
             style={{
-              background: "transparent",
-              borderColor: "rgba(0,0,0,0.2)",
-              color: "rgba(0,0,0,0.4)",
+              background: "#1a1a1a",
+              borderColor: "#1a1a1a",
+              color: "#fff",
               cursor: "pointer",
             }}
             aria-label="Previous testimonial"
@@ -329,12 +329,12 @@ export default function TestimonialsSection() {
             whileTap={{ scale: 0.91 }}
             whileHover={{ scale: 1.07 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="w-11 h-11 rounded-full flex items-center justify-center"
+            className="w-12 h-12 rounded-full flex items-center justify-center border"
             style={{
               background: "#1a1a1a",
+              borderColor: "#1a1a1a",
               color: "#fff",
               cursor: "pointer",
-              border: "none",
             }}
             aria-label="Next testimonial"
           >
