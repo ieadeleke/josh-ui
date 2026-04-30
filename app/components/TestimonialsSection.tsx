@@ -109,9 +109,7 @@ function AvatarInitials({
 function ArrowLeft() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      {/* Stem: right edge → chevron tip */}
       <line x1="15.5" y1="10" x2="7.5" y2="10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      {/* Chevron head */}
       <path d="M11 5.5L6.5 10L11 14.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
