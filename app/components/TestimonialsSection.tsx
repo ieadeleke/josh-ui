@@ -198,6 +198,7 @@ export default function TestimonialsSection() {
   const shuffleNext = useCallback(() => runShuffle("next"), [runShuffle]);
   const shufflePrev = useCallback(() => runShuffle("prev"), [runShuffle]);
 
+  
   // Auto-play effect
   useEffect(() => {
     const interval = setInterval(() => {
